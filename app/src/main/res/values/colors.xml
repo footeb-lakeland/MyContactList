@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="teal">#FF009688</color>
+    <color name="teal_dark">#FF00796B</color>
+    <color name="cornflowerblue">#FF6495ED</color>
+    <color name="rebeccapurple">#FF663399</color>
+    <color name="navbar_background">#1a1a48</color>
+    <color name="toolbar_background">#bebebe</color>
 </resources>
+
