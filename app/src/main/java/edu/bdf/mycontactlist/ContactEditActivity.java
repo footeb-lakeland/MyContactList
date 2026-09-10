@@ -20,5 +20,10 @@ public class ContactEditActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Navbar.initListButton(this);
+        Navbar.initMapButton(this);
+        Navbar.initSettingsButton(this);
     }
+
 }

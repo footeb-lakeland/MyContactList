@@ -4,6 +4,7 @@
     <string name="button_to_display_the_map">Display the Map</string>
     <string name="button_to_display_the_settings">Display the Settings</string>
     <string name="buttonToggleOffText">OFF</string>
+    <string name="on">ON</string>
     <string name="buttonSaveText">Save</string>
     <string name="contact">Contact:</string>
     <string name="contact_hint">Contact</string>

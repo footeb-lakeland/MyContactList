@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/display_a_list_of_contacts"
+            android:contentDescription="@string/button_to_display_the_list_of_contacts"
             app:srcCompat="@drawable/contactlisticon" />
 
         <ImageButton
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/display_a_map"
+            android:contentDescription="@string/button_to_display_the_map"
             app:srcCompat="@drawable/mapicon" />
 
         <ImageButton
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:contentDescription="@string/display_the_settings"
+            android:contentDescription="@string/button_to_display_the_settings"
             app:srcCompat="@drawable/settingsicon" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
