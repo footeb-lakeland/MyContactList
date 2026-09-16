@@ -22,8 +22,8 @@
             android:id="@+id/toggleButtonEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginEnd="@dimen/_32dp"
             android:layout_weight="1"
             android:text="@string/on" />
 
@@ -31,8 +31,8 @@
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/_32dp"
+            android:layout_marginEnd="@dimen/_16dp"
             android:layout_weight="1"
             android:text="@string/buttonSaveText" />
     </LinearLayout>
@@ -66,8 +66,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
+                android:autofillHints="name"
                 android:ems="14"
-                android:hint="Name"
+                android:hint="@string/name"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textContact"/>
@@ -87,8 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
+                android:autofillHints=""
                 android:ems="14"
-                android:hint="Address"
+                android:hint="@string/address"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textAddress"
@@ -99,8 +101,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:autofillHints=""
                 android:ems="9"
-                android:hint="City"
+                android:hint="@string/city"
                 android:imeOptions="actionNext"
                 android:inputType="textCapWords"
                 android:nextFocusDown="@id/editState"
@@ -112,10 +115,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:layout_marginLeft="2dp"
                 android:layout_marginTop="8dp"
                 android:ems="2"
-                android:hint="State"
+                android:hint="@string/state"
                 android:inputType="textCapCharacters"
                 android:maxLength="2"
                 android:nextFocusDown="@id/editZipcode"
@@ -129,7 +131,7 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="8dp"
                 android:ems="5"
-                android:hint="Zipcode"
+                android:hint="@string/zipcode"
                 android:inputType="number"
                 android:maxLength="5"
                 app:layout_constraintStart_toEndOf="@+id/editState"
@@ -139,9 +141,9 @@
                 android:id="@+id/textHome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Home Phone:"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:text="@string/home_phone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editCity" />
 
@@ -151,6 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:autofillHints=""
                 android:ems="8"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
@@ -163,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:text="Cell Phone:"
+                android:text="@string/cell_phone"
                 app:layout_constraintStart_toEndOf="@+id/editHome"
                 app:layout_constraintTop_toBottomOf="@+id/editCity" />
 
@@ -172,6 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:autofillHints=""
                 android:ems="8"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
@@ -182,9 +186,9 @@
                 android:id="@+id/textEMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="E-Mail Address:"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:text="@string/e_mail_address"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editHome" />
 
@@ -192,10 +196,12 @@
                 android:id="@+id/editEMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/_16dp"
                 android:layout_marginTop="8dp"
+                android:autofillHints=""
                 android:ems="16"
                 android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
                 app:layout_constraintTop_toBottomOf="@id/textEMail"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -203,9 +209,9 @@
                 android:id="@+id/textBDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/_16dp"
                 android:layout_marginTop="24dp"
-                android:text="Birthday:"
+                android:text="@string/birthday"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editEMail" />
 
@@ -215,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                android:text="01/01/1970"
+                android:text="@string/_01_01_1970"
                 app:layout_constraintTop_toBottomOf="@id/editEMail"
                 app:layout_constraintStart_toEndOf="@id/textBDay"/>
 
@@ -223,8 +229,8 @@
                 android:id="@+id/btnBirthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Change"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:text="@string/change"
                 app:layout_constraintBaseline_toBaselineOf="@id/textBirthday"
                 app:layout_constraintEnd_toEndOf="parent" />
 
