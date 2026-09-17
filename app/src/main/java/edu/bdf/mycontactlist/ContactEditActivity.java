@@ -1,8 +1,11 @@
 package edu.bdf.mycontactlist;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
@@ -10,9 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 
-public class ContactEditActivity extends AppCompatActivity {
+import java.util.Calendar;
 
+public class ContactEditActivity extends AppCompatActivity implements DatePickerDialog.SaveDateListener {
+    // Brian Foote
+    public static final String TAG = "ContactEditActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +32,7 @@ public class ContactEditActivity extends AppCompatActivity {
         });
 
         initToggleButton();
+        initChangeDateButton();
         Navbar.initListButton(this);
         Navbar.initMapButton(this);
         Navbar.initSettingsButton(this);
@@ -36,6 +44,19 @@ public class ContactEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setForEditing(editToggle.isChecked());
+            }
+        });
+    }
+
+    private void initChangeDateButton(){
+        Button changeDate = findViewById(R.id.btnBirthday);
+
+        changeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                DatePickerDialog datePickerDialog = new DatePickerDialog();
+                datePickerDialog.show(fm, "DatePick");
             }
         });
     }
@@ -61,5 +82,12 @@ public class ContactEditActivity extends AppCompatActivity {
 
         if(enabled)
             editName.requestFocus();
+    }
+
+    @Override
+    public void didFinishDatePickerDialog(Calendar selectedTime) {
+        // Catch the selected date
+        TextView tvSelectedDate = findViewById(R.id.textBirthday);
+        tvSelectedDate.setText(DateFormat.format("MM/dd/yyyy", selectedTime));
     }
 }
