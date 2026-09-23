@@ -24,6 +24,6 @@ public class ContactListActivity extends AppCompatActivity {
         Navbar.initListButton(this);
         Navbar.initMapButton(this);
         Navbar.initSettingsButton(this);
-
+        this.setTitle("List of Contacts");
     }
 }
