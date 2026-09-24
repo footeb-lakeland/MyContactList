@@ -30,7 +30,10 @@ public class Contact {
         this.state = state;
     }
 
-
+    public Contact(){
+        contactID = -1;
+        birthday = Calendar.getInstance();
+    }
 
     public int getContactID() {
         return contactID;
