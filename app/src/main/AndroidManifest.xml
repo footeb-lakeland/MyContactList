@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyContactList">
         <activity
-            android:name=".ContactEditActivity"
+            android:name=".ContactListActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ContactListActivity"
+            android:name=".ContactEditActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity

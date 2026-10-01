@@ -82,6 +82,17 @@ public class ContactDataSource {
         }
         Log.d(TAG, "refreshData: End: " + results + " rows...");
     }
+
+    public boolean deleteContact(int contactId) {
+        boolean didDelete = false;
+        try {
+            didDelete = database.delete("contact", "_id=" + contactId, null) > 0;
+        }
+        catch (Exception e) {
+            //Do nothing -return value already set to false
+        }
+        return didDelete;
+    }
     public Contact getSpecificContact(int contactId) {
         Contact contact = new Contact();
         String query = "SELECT  * FROM contact WHERE _id =" + contactId;

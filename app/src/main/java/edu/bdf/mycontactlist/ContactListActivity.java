@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -54,6 +56,7 @@ public class ContactListActivity extends AppCompatActivity {
         Navbar.initSettingsButton(this);
         this.setTitle("List of Contacts");
         initAddContactButton();
+        initDeleteSwitch();
         Log.d(TAG, "onCreate: End");
     }
 
@@ -70,6 +73,17 @@ public class ContactListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+    private void initDeleteSwitch() {
+        SwitchCompat s = findViewById(R.id.switchDelete);
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                boolean status = compoundButton.isChecked();
+                contactAdapter.setDelete(status);
+                contactAdapter.notifyDataSetChanged();
             }
         });
     }

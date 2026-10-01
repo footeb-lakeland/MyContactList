@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter{
-    private ArrayList<c> contactData;
+    private ArrayList<Contact> contactData;
     private View.OnClickListener mOnItemClickListener;
     private boolean isDeleting;
     private Context parentContext;

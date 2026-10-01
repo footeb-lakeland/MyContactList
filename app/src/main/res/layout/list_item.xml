@@ -41,7 +41,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
         android:text="DELETE"
-        android:textColor="@color/system_red"
+        android:textColor="@color/red"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
