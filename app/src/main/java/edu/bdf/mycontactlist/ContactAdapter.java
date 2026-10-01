@@ -23,6 +23,9 @@ public class ContactAdapter extends RecyclerView.Adapter{
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewContact = itemView.findViewById(R.id.textViewName);
+            itemView.setTag(this);
+            // Add the item click event
+            itemView.setOnClickListener(mOnItemClickListener);
         }
 
         public TextView getContactTextView() {
@@ -36,6 +39,11 @@ public class ContactAdapter extends RecyclerView.Adapter{
         contactData = arrayList;
     }
 
+    public void setOnItemClickListener(View.OnClickListener itemClickListener)
+    {
+        mOnItemClickListener = itemClickListener;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,7 +53,8 @@ public class ContactAdapter extends RecyclerView.Adapter{
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,
+                                 final int position) {
         ContactViewHolder cvh = (ContactViewHolder) holder;
         cvh.getContactTextView().setText(contactData.get(position));
     }

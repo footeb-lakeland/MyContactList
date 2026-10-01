@@ -40,6 +40,8 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
             return insets;
         });
 
+        Log.d(TAG, "onCreate: Start");
+
         initToggleButton();
         initChangeDateButton();
         Navbar.initListButton(this);
@@ -50,6 +52,9 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         initTextChangedEvents();
 
         currentContact = new Contact();
+
+        Log.d(TAG, "onCreate: End");
+
 
     }
     private void initToggleButton(){
@@ -212,7 +217,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                     ds.open();
 
                     if (currentContact.getContactID() == -1) {
-                        wasSuccessful = ds.insertContact(currentContact);
+                        wasSuccessful = ds.insertContact(currentContact) > 0;
                         if (wasSuccessful) {
                             int newId = ds.getLastContactId();
                             currentContact.setContactID(newId);
@@ -229,7 +234,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
 
                     }
                     else {
-                        wasSuccessful = ds.updateContact(currentContact);
+                        wasSuccessful = ds.updateContact(currentContact) > 0;
                     }
                     ds.close();
                 }

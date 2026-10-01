@@ -4,11 +4,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Contact {
+public class Contact implements Serializable {
     public static final String TAG = "Contact";
     public static final String DELIM = "|";
+
 
     // Private fields
     private int contactID;
@@ -21,6 +23,46 @@ public class Contact {
     private String eMail;
     private Calendar birthday;
     private String state;
+
+    public Contact(String contactName,
+                   String streetAddress,
+                   String city,
+                   String state,
+                   String zipCode,
+                   String phoneNumber,
+                   String cellNumber,
+                   String email,
+                   Calendar birthday) {
+        contactID = -1;
+        this.birthday = Calendar.getInstance();
+        this.contactName = contactName;
+        this.streetAddress = streetAddress;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.cellNumber = cellNumber;
+        this.eMail = email;
+        this.setBirthday(birthday);
+    }
+    public Contact(String contactName,
+                   String streetAddress,
+                   String city,
+                   String state,
+                   String zipCode,
+                   String phoneNumber,
+                   String cellNumber,
+                   String email) {
+        contactID = -1;
+        this.birthday = Calendar.getInstance();
+        this.contactName = contactName;
+        this.streetAddress = streetAddress;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+        this.cellNumber = cellNumber;
+        this.eMail = email;
+        this.setBirthday(birthday);
+    }
 
     public String getState() {
         return state;
