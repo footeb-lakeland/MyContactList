@@ -12,7 +12,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textColor="@color/blue"
         android:textSize="@dimen/text_size_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +37,7 @@
         android:layout_marginEnd="16dp"
         android:background="@color/blue"
         android:layout_marginBottom="8dp"
-        android:text="DELETE"
+        android:text="@string/delete"
         android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
