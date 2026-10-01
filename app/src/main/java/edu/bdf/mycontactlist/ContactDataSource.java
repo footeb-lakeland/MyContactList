@@ -82,7 +82,61 @@ public class ContactDataSource {
         }
         Log.d(TAG, "refreshData: End: " + results + " rows...");
     }
+    public Contact getSpecificContact(int contactId) {
+        Contact contact = new Contact();
+        String query = "SELECT  * FROM contact WHERE _id =" + contactId;
+        Cursor cursor = database.rawQuery(query, null);
 
+        if (cursor.moveToFirst()) {
+            contact.setContactID(cursor.getInt(0));
+            contact.setContactName(cursor.getString(1));
+            contact.setStreetAddress(cursor.getString(2));
+            contact.setCity(cursor.getString(3));
+            contact.setState(cursor.getString(4));
+            contact.setZipCode(cursor.getString(5));
+            contact.setPhoneNumber(cursor.getString(6));
+            contact.setCellNumber(cursor.getString(7));
+            contact.seteMail(cursor.getString(8));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(Long.valueOf(cursor.getString(9)));
+            contact.setBirthday(calendar);
+
+            cursor.close();
+        }
+        return contact;
+    }
+    public ArrayList<Contact> getContacts(String sortField, String sortOrder) {
+        ArrayList<Contact> contacts = new ArrayList<Contact>();
+        try {
+            String query = "SELECT  * FROM contact ORDER BY " + sortField + " " + sortOrder;
+            Cursor cursor = database.rawQuery(query, null);
+
+            Contact newContact;
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                newContact = new Contact();
+                newContact.setContactID(cursor.getInt(0));
+                newContact.setContactName(cursor.getString(1));
+                newContact.setStreetAddress(cursor.getString(2));
+                newContact.setCity(cursor.getString(3));
+                newContact.setState(cursor.getString(4));
+                newContact.setZipCode(cursor.getString(5));
+                newContact.setPhoneNumber(cursor.getString(6));
+                newContact.setCellNumber(cursor.getString(7));
+                newContact.seteMail(cursor.getString(8));
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(Long.valueOf(cursor.getString(9)));
+                newContact.setBirthday(calendar);
+                contacts.add(newContact);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        catch (Exception e) {
+            contacts = new ArrayList<Contact>();
+        }
+        return contacts;
+    }
 
     public ArrayList<String> getContactName() {
         ArrayList<String> contactNames = new ArrayList<>();
