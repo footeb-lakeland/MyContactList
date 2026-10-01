@@ -93,6 +93,7 @@ public class ContactDataSource {
         }
         return didDelete;
     }
+    
     public Contact getSpecificContact(int contactId) {
         Contact contact = new Contact();
         String query = "SELECT  * FROM contact WHERE _id =" + contactId;

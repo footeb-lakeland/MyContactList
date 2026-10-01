@@ -68,9 +68,9 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         {
             Log.d(TAG, "onCreate: Extras Start");
             //currentContact.setContactName(extras.getString("contact"));
-            //currentContact = (Contact)getIntent().getSerializableExtra("contact");
-            //Log.d(TAG, "onCreate: " + currentContact.getContactName());
-            //initContact();
+            currentContact = (Contact)getIntent().getSerializableExtra("contact");
+            Log.d(TAG, "onCreate: " + currentContact.getContactName());
+            initContact();
             Log.d(TAG, "onCreate: end extras");
         }
         else {

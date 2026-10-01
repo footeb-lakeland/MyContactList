@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/_16dp"
         android:text="@string/sort_contacts_by"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sp"
+        android:textSize="@dimen/_24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,8 @@
         android:layout_marginStart="@dimen/_32dp"
         android:layout_marginTop="@dimen/_8dp"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sp"
+        android:background="@drawable/border_line"
+        android:textSize="@dimen/_24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
@@ -38,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:textSize="@dimen/_18sp"
+            android:textSize="@dimen/_24sp"
+            android:layout_margin="@dimen/_8dp"
             android:text="@string/name" />
 
         <RadioButton
@@ -47,7 +49,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:textSize="@dimen/_18sp"
+            android:layout_margin="@dimen/_8dp"
+            android:textSize="@dimen/_24sp"
             android:text="@string/city" />
 
         <RadioButton
@@ -56,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:textSize="@dimen/_18sp"
+            android:layout_margin="@dimen/_8dp"
+            android:textSize="@dimen/_24sp"
             android:text="@string/birthday2" />
     </RadioGroup>
     <TextView
@@ -67,7 +71,7 @@
         android:layout_marginTop="@dimen/_16dp"
         android:text="@string/sort_order"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sp"
+        android:textSize="@dimen/_24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupSortBy" />
 
@@ -76,6 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_32dp"
+        android:background="@drawable/border_line"
         android:layout_marginTop="@dimen/_8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
@@ -85,8 +90,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="@dimen/_8dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/_18sp"
+            android:textSize="@dimen/_24sp"
             android:text="@string/ascending" />
 
         <RadioButton
@@ -94,8 +100,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="@dimen/_8dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/_18sp"
+            android:textSize="@dimen/_24sp"
             android:text="@string/descending" />
     </RadioGroup>
     <include layout="@layout/navbar" />

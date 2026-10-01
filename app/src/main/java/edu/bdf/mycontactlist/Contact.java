@@ -61,7 +61,6 @@ public class Contact implements Serializable {
         this.phoneNumber = phoneNumber;
         this.cellNumber = cellNumber;
         this.eMail = email;
-        this.setBirthday(birthday);
     }
 
     public String getState() {
@@ -157,15 +156,15 @@ public class Contact implements Serializable {
         } else if (controlId == R.id.editAddress) {
             this.setStreetAddress(value);
         }else if (controlId == R.id.editCity) {
-            this.setStreetAddress(value);
+            this.setCity(value);
         }else if (controlId == R.id.editState) {
-            this.setStreetAddress(value);
+            this.setState(value);
         }else if (controlId == R.id.editZipcode) {
-            this.setStreetAddress(value);
+            this.setZipCode(value);
         }else if (controlId == R.id.editHome) {
-            this.setStreetAddress(value);
+            this.setPhoneNumber(value);
         }else if (controlId == R.id.editCell) {
-            this.setStreetAddress(value);
+            this.setCellNumber(value);
         }
     }
         @NonNull
