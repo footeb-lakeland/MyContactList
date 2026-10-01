@@ -149,10 +149,26 @@ public class Contact implements Serializable {
         this.birthday = birthday;
     }
 
-    // Public Accessors
-
-
-    @NonNull
+    public void setControlText(int controlId, String value) {
+        if(controlId == R.id.editName)
+        {
+            Log.d("Team", "setControlText: " + value);
+            this.setContactName(value);
+        } else if (controlId == R.id.editAddress) {
+            this.setStreetAddress(value);
+        }else if (controlId == R.id.editCity) {
+            this.setStreetAddress(value);
+        }else if (controlId == R.id.editState) {
+            this.setStreetAddress(value);
+        }else if (controlId == R.id.editZipcode) {
+            this.setStreetAddress(value);
+        }else if (controlId == R.id.editHome) {
+            this.setStreetAddress(value);
+        }else if (controlId == R.id.editCell) {
+            this.setStreetAddress(value);
+        }
+    }
+        @NonNull
     public String toString()
     {
         String data = contactID

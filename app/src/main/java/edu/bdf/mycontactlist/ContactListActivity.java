@@ -1,9 +1,11 @@
 package edu.bdf.mycontactlist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 
 public class ContactListActivity extends AppCompatActivity {
     public static final String TAG = "ContactListActivity";
-    ArrayList<String> contacts;
+    ArrayList<Contact> contacts;
     ContactAdapter contactAdapter;
     RecyclerView contactList;
 
@@ -29,7 +31,9 @@ public class ContactListActivity extends AppCompatActivity {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
             Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+            Log.d(TAG, "onClick: Before");
             intent.putExtra("contact", contacts.get(position));
+            Log.d(TAG, "onClick: After");
             startActivity(intent);
         }
     };
@@ -49,7 +53,7 @@ public class ContactListActivity extends AppCompatActivity {
         Navbar.initMapButton(this);
         Navbar.initSettingsButton(this);
         this.setTitle("List of Contacts");
-        //getContacts();
+        initAddContactButton();
         Log.d(TAG, "onCreate: End");
     }
 
@@ -59,13 +63,28 @@ public class ContactListActivity extends AppCompatActivity {
         super.onResume();
         getContacts();
     }
+
+    private void initAddContactButton() {
+        Button newContact = findViewById(R.id.buttonAddContact);
+        newContact.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
     public void getContacts()
     {
+        String sortBy = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortfield","contactname");
+        String sortOrder = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortorder","ASC");
+
         ContactDataSource ds = new ContactDataSource(this);
         try {
             ds.open();
-            //contacts = ds.getContacts(sortBy, sortOrder);
-            contacts = ds.getContactName();
+            contacts = ds.getContacts(sortBy, sortOrder);
+            //contacts = ds.getContactName();
             ds.close();
             if (contacts.size() > 0) {
                 contactList = findViewById(R.id.rvContacts);
