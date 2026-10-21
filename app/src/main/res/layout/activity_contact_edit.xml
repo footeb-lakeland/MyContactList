@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:background="#FFFFE0"
+    style="@style/Theme.MyContactList"
     android:layout_height="match_parent"
     tools:context=".ContactEditActivity">
 
@@ -58,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@string/contact"
-                android:textSize="@dimen/text_size_medium"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +81,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@string/address"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/editName" />
 
@@ -148,7 +146,6 @@
                 android:layout_marginStart="@dimen/_16dp"
                 android:layout_marginTop="@dimen/_16dp"
                 android:text="@string/home_phone"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editCity" />
 
@@ -172,7 +169,6 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/cell_phone"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toEndOf="@+id/editHome"
                 app:layout_constraintTop_toBottomOf="@+id/editCity" />
 
@@ -195,7 +191,6 @@
                 android:layout_marginStart="@dimen/_16dp"
                 android:layout_marginTop="@dimen/_16dp"
                 android:text="@string/e_mail_address"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editHome" />
 
@@ -219,7 +214,6 @@
                 android:layout_marginStart="@dimen/_16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/birthday"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editEMail" />
 
@@ -230,7 +224,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/_01_01_1970"
-                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintTop_toBottomOf="@id/editEMail"
                 app:layout_constraintStart_toEndOf="@id/textBDay"/>
 

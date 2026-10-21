@@ -5,6 +5,7 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/my_light_primary</item>
         <item name="android:textColor">@color/my_light_primary</item>
+        <item name="android:textSize">@dimen/_24sp</item>
     </style>
 
      <style name="Theme.MyContactList" parent="Base.Theme.MyContactList">
