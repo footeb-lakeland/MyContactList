@@ -20,4 +20,9 @@
     <color name="rebeccapurple">#663399</color>
     <color name="cornflowerblue">#6495ed</color>
     <color name="transparent">#FF000000</color>
+    <color name="pink">#FF69B4</color>
+    <color name="my_dark_primary">@color/pink</color>
+    <color name="my_light_primary">@color/blue</color>
+
+
 </resources>

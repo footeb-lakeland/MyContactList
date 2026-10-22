@@ -2,6 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyContactList">
         <activity
-            android:name=".ContactEditActivity"
+            android:name=".ContactListActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -22,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ContactListActivity"
+            android:name=".ContactEditActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -33,6 +47,9 @@
             android:name=".ContactSettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="" />
     </application>
 
 </manifest>

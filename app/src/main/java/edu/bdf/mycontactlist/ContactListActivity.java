@@ -1,14 +1,50 @@
 package edu.bdf.mycontactlist;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class ContactListActivity extends AppCompatActivity {
+    public static final String TAG = "ContactListActivity";
+    ArrayList<Contact> contacts;
+    ContactAdapter contactAdapter;
+    RecyclerView contactList;
+
+    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Log.d(TAG, "onClick: Start");
+            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+            int position = viewHolder.getAdapterPosition();
+            Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+            Log.d(TAG, "onClick: Before");
+            Contact contact = contacts.get(position);
+            contact.setPicture(null);
+            intent.putExtra("contact", contacts.get(position));
+            Log.d(TAG, "onClick: After");
+            startActivity(intent);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +60,85 @@ public class ContactListActivity extends AppCompatActivity {
         Navbar.initListButton(this);
         Navbar.initMapButton(this);
         Navbar.initSettingsButton(this);
+        this.setTitle("List of Contacts");
+        initAddContactButton();
+        initDeleteSwitch();
 
+        BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                double batteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
+                double levelScale = intent.getIntExtra(BatteryManager.EXTRA_SCALE,0);
+                int batteryPercent = (int) Math.floor(batteryLevel / levelScale * 100);
+                TextView textBatteryState = findViewById(R.id.textBatteryLevel);
+                textBatteryState.setText(batteryPercent + "%");
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(batteryReceiver, filter);
+
+        Log.d(TAG, "onCreate: End");
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        getContacts();
+    }
+
+    private void initAddContactButton() {
+        Button newContact = findViewById(R.id.buttonAddContact);
+        newContact.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    private void initDeleteSwitch() {
+        SwitchCompat s = findViewById(R.id.switchDelete);
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                boolean status = compoundButton.isChecked();
+                contactAdapter.setDelete(status);
+                contactAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+    public void getContacts()
+    {
+        String sortBy = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortfield","contactname");
+        String sortOrder = getSharedPreferences("MyContactListPreferences",
+                Context.MODE_PRIVATE).getString("sortorder","ASC");
+
+        ContactDataSource ds = new ContactDataSource(this);
+        try {
+            ds.open();
+            contacts = ds.getContacts(sortBy, sortOrder);
+            //contacts = ds.getContactName();
+            ds.close();
+            if (contacts.size() > 0) {
+                contactList = findViewById(R.id.rvContacts);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+                contactList.setLayoutManager(layoutManager);
+                contactAdapter = new ContactAdapter(contacts, this);
+                contactAdapter.setOnItemClickListener(onItemClickListener);
+                contactList.setAdapter(contactAdapter);
+            }
+            else {
+                ds.open();
+                ds.refreshData();
+                ds.close();
+                //Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+                //startActivity(intent);
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Error retrieving contacts", Toast.LENGTH_LONG).show();
+        }
     }
 }
