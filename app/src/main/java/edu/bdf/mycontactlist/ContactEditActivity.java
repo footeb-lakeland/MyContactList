@@ -1,6 +1,10 @@
 package edu.bdf.mycontactlist;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
@@ -17,10 +21,14 @@ import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +38,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
     public static final String TAG = "ContactEditActivity";
     Contact currentContact;
     Boolean loading = false;
+    final int PERMISSION_REQUEST_PHONE = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         initTextChanged(R.id.editHome);
         initTextChanged(R.id.editCell);
         initTextChangedEvents();
+        initCallFunction();
 
 
 
@@ -82,6 +92,63 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         Log.d(TAG, "onCreate: End");
 
 
+    }
+
+    private void initCallFunction() {
+        EditText editPhone = (EditText) findViewById(R.id.editHome);
+        editPhone.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View arg0) {
+                checkPhonePermission(currentContact.getPhoneNumber());
+                return false;
+            }
+        });
+
+        EditText editCell = (EditText) findViewById(R.id.editCell);
+        editCell.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View arg0) {
+                checkPhonePermission(currentContact.getCellNumber());
+                return false;
+            }
+        });
+    }
+
+    private void checkPhonePermission(String phoneNumber) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(ContactEditActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(ContactEditActivity.this, android.Manifest.permission.CALL_PHONE)) {
+
+                    Snackbar.make(findViewById(R.id.main), "MyContactList requires this permission to place a call from the app.", Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ActivityCompat.requestPermissions(ContactEditActivity.this, new String[]{android.Manifest.permission.CALL_PHONE },PERMISSION_REQUEST_PHONE);
+                                }
+                            })
+                            .show();
+                } else {
+                    ActivityCompat.requestPermissions(ContactEditActivity.this, new String[]{android.Manifest.permission.CALL_PHONE},PERMISSION_REQUEST_PHONE);
+                }
+            } else {
+                callContact(phoneNumber);
+            }
+        } else {
+            callContact(phoneNumber);
+        }
+    }
+
+    private void callContact(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + phoneNumber));
+        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return  ;
+        }
+        else {
+            startActivity(intent);
+        }
     }
 
     private void initContact() {
