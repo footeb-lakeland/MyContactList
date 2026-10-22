@@ -1,5 +1,6 @@
 package edu.bdf.mycontactlist;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,16 @@ public class Contact implements Serializable {
     private String eMail;
     private Calendar birthday;
     private String state;
+
+    private Bitmap picture;
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
+    }
 
     public Contact(String contactName,
                    String streetAddress,
