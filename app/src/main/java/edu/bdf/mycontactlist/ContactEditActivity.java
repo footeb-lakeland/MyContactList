@@ -253,6 +253,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         else {
             picture.setImageResource(R.drawable.noimage);
         }
+
     }
     private void initToggleButton(){
         final ToggleButton editToggle = (ToggleButton)findViewById(R.id.toggleButtonEdit);

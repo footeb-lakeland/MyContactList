@@ -38,6 +38,8 @@ public class ContactListActivity extends AppCompatActivity {
             int position = viewHolder.getAdapterPosition();
             Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
             Log.d(TAG, "onClick: Before");
+            Contact contact = contacts.get(position);
+            contact.setPicture(null);
             intent.putExtra("contact", contacts.get(position));
             Log.d(TAG, "onClick: After");
             startActivity(intent);
