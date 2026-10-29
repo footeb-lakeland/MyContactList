@@ -202,11 +202,13 @@ public class RestClient {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
+                            volleyCallback.onSuccess(null);
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                    volleyCallback.onError(error.getMessage());
                 }
             })
             {
