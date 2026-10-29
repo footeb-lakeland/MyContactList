@@ -116,7 +116,7 @@ public class ContactListActivity extends AppCompatActivity {
         String sortOrder = getSharedPreferences("MyContactListPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
 
-        ContactDataSource ds = new ContactDataSource(this);
+        //ContactDataSource ds = new ContactDataSource(this);
         try {
             //ds.open();
             //contacts = ds.getContacts(sortBy, sortOrder);

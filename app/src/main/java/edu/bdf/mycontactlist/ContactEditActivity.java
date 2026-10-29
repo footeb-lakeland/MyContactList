@@ -216,16 +216,21 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
 
     private void initContact(int id) {
 
-        ContactDataSource ds = new ContactDataSource(ContactEditActivity.this);
+        // ContactDataSource ds = new ContactDataSource(MainActivity.this);
         try {
-            ds.open();
-            currentContact = ds.getSpecificContact(id);
-            ds.close();
+            //ds.open();
+            //currentContact = ds.getSpecificContact(id);
+            //ds.close();
+            Log.d(TAG, "initContact: " + id);
+            getOneContact(id);
+            Log.d(TAG, "initContact: " + currentContact.toString());
         }
         catch (Exception e) {
             Toast.makeText(this, "Load Contact Failed", Toast.LENGTH_LONG).show();
         }
+    }
 
+    private void RebindScreen() {
         EditText editName = findViewById(R.id.editName);
         EditText editAddress = findViewById(R.id.editAddress);
         EditText editCity = findViewById(R.id.editCity);
@@ -253,8 +258,8 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         else {
             picture.setImageResource(R.drawable.noimage);
         }
-
     }
+
     private void initToggleButton(){
         final ToggleButton editToggle = (ToggleButton)findViewById(R.id.toggleButtonEdit);
         editToggle.setOnClickListener(new View.OnClickListener() {
@@ -314,6 +319,39 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         etPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         etCell.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
+    private void getOneContact(int id){
+        {
+            try {
+                Log.d(TAG, "getOneMeal: " + ContactListActivity.CONTACTSAPI + id);
+                RestClient.executeGetOneRequest(ContactListActivity.CONTACTSAPI + id, this,
+                    new VolleyCallback(){
+                    @Override
+                    public void onSuccess(ArrayList<Contact> result){
+                        //do stuff here
+                        for (Contact c : result) {
+                            Log.d(TAG, "onResume: " + c.getContactName());
+                        }
+                        currentContact= result.get(0);
+                        RebindScreen();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.d(TAG, "onError: " + error);
+                    }
+                });
+
+                Log.d(TAG, "getOneContact: Contacts End");
+
+            }
+            catch (Exception e) {
+                Log.d(TAG, "getOneContact: " + e.getMessage());
+                Toast.makeText(this, "Error retrieving contacts", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
     private void initSaveButton() {
         Button saveButton = findViewById(R.id.buttonSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -322,45 +360,79 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
             public void onClick(View view) {
                 boolean wasSuccessful;
                 hideKeyboard();
-                ContactDataSource ds = new ContactDataSource(ContactEditActivity.this);
-                FileIOHelper fileIO = new FileIOHelper();
+                //ContactDataSource ds = new ContactDataSource(MainActivity.this);
+                //FileIO fileIO = new FileIO();
                 try {
-                    ds.open();
+                    //ds.open();
 
                     if (currentContact.getContactID() == -1) {
-                        wasSuccessful = ds.insertContact(currentContact) > 0;
-                        if (wasSuccessful) {
-                            int newId = ds.getLastContactId();
-                            currentContact.setContactID(newId);
-                        }
+                        // Insert the contact
+                        //wasSuccessful = ds.insertContact(currentContact);
+                        //Log.d(TAG, "onClick: Success: " + wasSuccessful);
+                        //if (wasSuccessful) {
+                        //    int newId = ds.getLastContactId();
+                        //    currentContact.setContactID(newId);
+                        //    Log.d(TAG, "onClick: New Id" + newId);
+                        // }
 
-                        // Also write to a file for fun.
-                        ArrayList<String> contacts = new ArrayList<String>();
-                        contacts.add(currentContact.toString());
+                        // Writing to flat file.
+                        //ArrayList<String> contacts = new ArrayList<String>();
+                        //contacts.add(currentContact.toString());
 
-                        Log.d(currentContact.TAG, "onClick: " + contacts.size());
-                        fileIO.writeFile(ContactEditActivity.this, contacts);
-                        Log.d(currentContact.TAG, currentContact.getContactName() + " written");
-                        Toast.makeText(ContactEditActivity.this, currentContact.getContactName() + " written", Toast.LENGTH_LONG).show();
+                        //Log.d(currentContact.TAG, "onClick: " + contacts.size());
+                        //fileIO.writeFile(MainActivity.this, contacts);
+                        //Log.d(currentContact.TAG, currentContact.getContactName() + " written");
+                        //Toast.makeText(MainActivity.this, currentContact.getContactName() + " written", Toast.LENGTH_LONG).show();
+
+                        RestClient.executePostRequest(currentContact,
+                                ContactListActivity.CONTACTSAPI,
+                                ContactEditActivity.this,
+                                new VolleyCallback() {
+                                    @Override
+                                    public void onSuccess(ArrayList<Contact> result) {
+                                        currentContact.setContactID(result.get(0).getContactID());
+                                        Log.d(TAG, "onSuccess: " + currentContact.getContactID());
+                                        //toggle();
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+
+                                    }
+                                });
 
                     }
                     else {
-                        wasSuccessful = ds.updateContact(currentContact) > 0;
+                        // Update the contact
+                        //wasSuccessful = ds.updateContact(currentContact);
+
+                        RestClient.executePutRequest(currentContact,
+                                ContactListActivity.CONTACTSAPI + currentContact.getContactID(),
+                                ContactEditActivity.this,
+                                new VolleyCallback() {
+                                    @Override
+                                    public void onSuccess(ArrayList<Contact> result) {
+                                        Log.d(TAG, "onSuccess: " + currentContact.getContactID());
+                                        //toggle();
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+
+                                    }
+                                });
                     }
-                    ds.close();
+                    //ds.close();
                 }
                 catch (Exception e) {
                     wasSuccessful = false;
                 }
 
-                if (wasSuccessful) {
-                    ToggleButton editToggle = findViewById(R.id.toggleButtonEdit);
-                    editToggle.toggle();
-                    setForEditing(false);
-                }
+
             }
         });
     }
+
     private void initChangeDateButton(){
         Button changeDate = findViewById(R.id.btnBirthday);
 
