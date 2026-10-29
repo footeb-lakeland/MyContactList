@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 public class ContactListActivity extends AppCompatActivity {
     public static final String TAG = "ContactListActivity";
+    public static final String CONTACTSAPI = "https://fvtcdp.azurewebsites.net/api/Contact/";
     ArrayList<Contact> contacts;
     ContactAdapter contactAdapter;
     RecyclerView contactList;
@@ -117,25 +118,57 @@ public class ContactListActivity extends AppCompatActivity {
 
         ContactDataSource ds = new ContactDataSource(this);
         try {
-            ds.open();
-            contacts = ds.getContacts(sortBy, sortOrder);
+            //ds.open();
+            //contacts = ds.getContacts(sortBy, sortOrder);
             //contacts = ds.getContactName();
-            ds.close();
-            if (contacts.size() > 0) {
-                contactList = findViewById(R.id.rvContacts);
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-                contactList.setLayoutManager(layoutManager);
-                contactAdapter = new ContactAdapter(contacts, this);
-                contactAdapter.setOnItemClickListener(onItemClickListener);
-                contactList.setAdapter(contactAdapter);
-            }
-            else {
-                ds.open();
-                ds.refreshData();
-                ds.close();
-                //Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
-                //startActivity(intent);
-            }
+            //ds.close();
+
+            RestClient.executeGetRequest(CONTACTSAPI,
+                    this,
+                    new VolleyCallback() {
+                        @Override
+                        public void onSuccess(ArrayList<Contact> result) {
+                            Log.d(TAG, "onSuccess: Contacts : " + result.size());
+                            contacts = result;
+                            if (contacts.size() > 0) {
+                                RecyclerView contactList = findViewById(R.id.rvContacts);
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ContactListActivity.this);
+                                contactList.setLayoutManager(layoutManager);
+
+                                contactAdapter = new ContactAdapter(contacts, ContactListActivity.this);
+                                contactAdapter.setOnItemClickListener(onItemClickListener);
+                                contactList.setAdapter(contactAdapter);
+                                Log.d(TAG, "onSuccess End");
+                            }
+                            else {
+                                Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+                                startActivity(intent);
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            Log.d(TAG, "onError: " + error);
+                        }
+                    });
+
+//            if (contacts.size() > 0) {
+//                contactList = findViewById(R.id.rvContacts);
+//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+//                contactList.setLayoutManager(layoutManager);
+//                contactAdapter = new ContactAdapter(contacts, this);
+//                contactAdapter.setOnItemClickListener(onItemClickListener);
+//                contactList.setAdapter(contactAdapter);
+//            }
+//            else {
+//                ds.open();
+//                ds.refreshData();
+//                ds.close();
+//                //Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
+//                //startActivity(intent);
+//            }
         }
         catch (Exception e) {
             Toast.makeText(this, "Error retrieving contacts", Toast.LENGTH_LONG).show();
