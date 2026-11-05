@@ -122,7 +122,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                         Bitmap scaledPhoto = Bitmap.createScaledBitmap(photo,144,144,true);
                         ImageButton imageContact = (ImageButton) findViewById(R.id.imageContact);
                         imageContact.setImageBitmap(scaledPhoto);
-                        currentContact.setPicture(scaledPhoto);
+                        currentContact.setPhoto(scaledPhoto);
                         Log.d(TAG, "onActivityResult: Set Bitmap");
 
                     }
@@ -248,12 +248,12 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         editZipCode.setText(currentContact.getZipCode());
         editPhone.setText(currentContact.getPhoneNumber());
         editCell.setText(currentContact.getCellNumber());
-        editEmail.setText(currentContact.geteMail());
+        editEmail.setText(currentContact.getEMail());
         birthDay.setText(DateFormat.format("MM/dd/yyyy",
                 currentContact.getBirthday().getTimeInMillis()).toString());
         ImageButton picture = findViewById(R.id.imageContact);
-        if (currentContact.getPicture() != null) {
-            picture.setImageBitmap(currentContact.getPicture());
+        if (currentContact.getPhoto() != null) {
+            picture.setImageBitmap(currentContact.getPhoto());
         }
         else {
             picture.setImageResource(R.drawable.noimage);
@@ -323,23 +323,23 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         {
             try {
                 Log.d(TAG, "getOneMeal: " + ContactListActivity.CONTACTSAPI + id);
-                RestClient.executeGetOneRequest(ContactListActivity.CONTACTSAPI + id, this,
-                    new VolleyCallback(){
-                    @Override
-                    public void onSuccess(ArrayList<Contact> result){
-                        //do stuff here
-                        for (Contact c : result) {
-                            Log.d(TAG, "onResume: " + c.getContactName());
-                        }
-                        currentContact= result.get(0);
-                        RebindScreen();
-                    }
+                RestClient.executeGetOneRequest(ContactListActivity.CONTACTSAPI + id,
+                        this,
+                        new VolleyCallback() {
+                            @Override
+                            public <T> void onSuccess(ArrayList<T> result) {
+                                int id = ((Contact)result.get(0)).getContactID();
+                                currentContact.setContactID(id);
+                                Log.d(TAG, "onSuccess: " + currentContact.getContactID());
+                                setForEditing(false);
+                            }
 
-                    @Override
-                    public void onError(String error) {
-                        Log.d(TAG, "onError: " + error);
-                    }
-                });
+                            @Override
+                            public void onError(String error) {
+                                Log.d(TAG, "onFailure: ");
+                            }
+                        },
+                        Contact.class);
 
                 Log.d(TAG, "getOneContact: Contacts End");
 
@@ -360,46 +360,30 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
             public void onClick(View view) {
                 boolean wasSuccessful;
                 hideKeyboard();
-                //ContactDataSource ds = new ContactDataSource(MainActivity.this);
-                //FileIO fileIO = new FileIO();
+
                 try {
                     //ds.open();
 
                     if (currentContact.getContactID() == -1) {
-                        // Insert the contact
-                        //wasSuccessful = ds.insertContact(currentContact);
-                        //Log.d(TAG, "onClick: Success: " + wasSuccessful);
-                        //if (wasSuccessful) {
-                        //    int newId = ds.getLastContactId();
-                        //    currentContact.setContactID(newId);
-                        //    Log.d(TAG, "onClick: New Id" + newId);
-                        // }
-
-                        // Writing to flat file.
-                        //ArrayList<String> contacts = new ArrayList<String>();
-                        //contacts.add(currentContact.toString());
-
-                        //Log.d(currentContact.TAG, "onClick: " + contacts.size());
-                        //fileIO.writeFile(MainActivity.this, contacts);
-                        //Log.d(currentContact.TAG, currentContact.getContactName() + " written");
-                        //Toast.makeText(MainActivity.this, currentContact.getContactName() + " written", Toast.LENGTH_LONG).show();
 
                         RestClient.executePostRequest(currentContact,
                                 ContactListActivity.CONTACTSAPI,
                                 ContactEditActivity.this,
                                 new VolleyCallback() {
                                     @Override
-                                    public void onSuccess(ArrayList<Contact> result) {
-                                        currentContact.setContactID(result.get(0).getContactID());
+                                    public <T> void onSuccess(ArrayList<T> result) {
+                                        int id = ((Contact)result.get(0)).getContactID();
+                                        currentContact.setContactID(id);
                                         Log.d(TAG, "onSuccess: " + currentContact.getContactID());
-                                        //toggle();
+                                        setForEditing(false);
                                     }
 
                                     @Override
                                     public void onError(String error) {
-
+                                        Log.d(TAG, "onError: " + error);
                                     }
-                                });
+                                },
+                                Contact.class);
 
                     }
                     else {
@@ -411,16 +395,19 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                                 ContactEditActivity.this,
                                 new VolleyCallback() {
                                     @Override
-                                    public void onSuccess(ArrayList<Contact> result) {
+                                    public <T> void onSuccess(ArrayList<T> result) {
+                                        //int id = ((Contact)result.get(0)).getContactID();
+                                        //currentContact.setContactID(id);
                                         Log.d(TAG, "onSuccess: " + currentContact.getContactID());
-                                        //toggle();
+                                        setForEditing(false);
                                     }
 
                                     @Override
                                     public void onError(String error) {
-
+                                        Log.d(TAG, "onError: " + error);
                                     }
-                                });
+                                },
+                                Contact.class);
                     }
                     //ds.close();
                 }

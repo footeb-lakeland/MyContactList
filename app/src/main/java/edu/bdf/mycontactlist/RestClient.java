@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,231 +28,198 @@ public class RestClient {
 
     public static final String TAG = "RestClient";
 
-    public static void executeGetRequest(String url,
-                                         Context context,
-                                         VolleyCallback volleyCallback) {
-        Log.d(TAG, "executeRequest: Start");
-        RequestQueue queue = Volley.newRequestQueue(context);
-        ArrayList<Contact> contacts = new ArrayList<>();
-        Log.d(TAG, "executeRequest: " + url);
-        try {
+    public static <T> void executeGetRequest(String url,
+                                             Context context,
+                                             VolleyCallback volleyCallback,
+                                             Class<T> entityType)
+    {
+        Log.d(TAG, "execGetRequest: Start");
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        ArrayList<T> entities = new ArrayList<T>();
+        Log.d(TAG, "execGetRequest: " + url);
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        try
+        {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                    url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d(TAG, "onResponse: " + response);
+                            //Log.d(TAG, "onResponse: " + response);
                             try {
                                 JSONArray items = new JSONArray(response);
-
                                 for (int i = 0; i < items.length(); i++) {
                                     JSONObject object = items.getJSONObject(i);
-                                    Contact contact = new Contact();
-                                    contact.setContactID(object.getInt("id"));
-                                    contact.setContactName(object.getString("contactName"));
-                                    contact.setStreetAddress(object.getString("streetAddress"));
-                                    contact.setCity(object.getString("city"));
-                                    contact.setState(object.getString("state"));
-                                    contact.setZipCode(object.getString("zipCode"));
-                                    contact.setPhoneNumber(object.getString("phoneNumber"));
-                                    contact.setCellNumber(object.getString("cellNumber"));
-                                    contact.seteMail(object.getString("email"));
-
-                                    String jsonPhoto = object.getString("photo");
-                                    if(jsonPhoto != null) {
-                                        Log.d(TAG, "onResponse: jsonPhoto: " + jsonPhoto);
-                                        byte[] bytePhoto = null; //need to initialize it
-                                        bytePhoto = Base64.decode(jsonPhoto, Base64.DEFAULT);
-                                        Bitmap bmp = BitmapFactory.decodeByteArray(bytePhoto, 0, bytePhoto.length);
-                                        contact.setPicture(bmp);
-                                    }
-
-                                    Log.d(TAG, "onResponse: " + jsonPhoto);
-
-                                    contacts.add(contact);
+                                    T entity = entityType.getDeclaredConstructor(JSONObject.class).newInstance(object);
+                                    entities.add(entity);
                                 }
-                                Log.d(TAG, "onResponse: Items: " + contacts.size());
-                                for (Contact c : contacts) {
-                                    Log.d(TAG, "onResponse: " + c.getContactName());
-                                }
-                                volleyCallback.onSuccess(contacts);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } catch (Exception e) {
+                                Log.e(TAG, "execGetRequest: ", e);
+                                throw new RuntimeException(e);
                             }
+                            volleyCallback.onSuccess(entities);
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "Error: " + error.getMessage());
-                    volleyCallback.onError(error.getMessage());
-                }
-            });
-            // IMPORTANT - NOTHING WILL WORK WITHOUT THIS LINE
-            queue.add(stringRequest);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        }
+                    });
+            // IMPORTANT
+            Log.d(TAG, "execGetRequest: Get all Request");
+            requestQueue.add(stringRequest);
+        }
+        catch(Exception e)
+        {
+            Log.e(TAG, "execGetRequest: ", e);
+            throw new RuntimeException(e);
         }
     }
-    public static void executeGetOneRequest(String request,
-                                            Context context,
-                                            VolleyCallback volleyCallback) {
-        Log.d(TAG, "executeRequest: Start");
-        RequestQueue queue = Volley.newRequestQueue(context);
-        ArrayList<Contact> contacts = new ArrayList<>();
-        Log.d(TAG, "executeRequest: " + request);
-        try {
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, request,
+    public static <T> void executeGetOneRequest(String url,
+                                                Context context,
+                                                VolleyCallback volleyCallback,
+                                                Class<T> entityType)
+    {
+        Log.d(TAG, "execGeOneRequest: Start");
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        ArrayList<T> entities = new ArrayList<T>();
+        Log.d(TAG, "execGeOneRequest: " + url);
+
+        try
+        {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                    url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             Log.d(TAG, "onResponse: " + response);
                             try {
                                 JSONObject object = new JSONObject(response);
-
-                                Contact contact = new Contact();
-                                contact.setContactID(object.getInt("id"));
-                                contact.setContactName(object.getString("contactName"));
-                                contact.setStreetAddress(object.getString("streetAddress"));
-                                contact.setCity(object.getString("city"));
-                                contact.setState(object.getString("state"));
-                                contact.setZipCode(object.getString("zipCode"));
-                                contact.setPhoneNumber(object.getString("phoneNumber"));
-                                contact.setCellNumber(object.getString("cellNumber"));
-                                contact.seteMail(object.getString("email"));
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTimeInMillis(Long.valueOf(object.getString("birthday")));
-                                contact.setBirthday(calendar);
-
-                                String jsonPhoto = object.getString("photo");
-                                Log.d(TAG, "onResponse: jsonPhoto: " + jsonPhoto);
-                                byte[] bytePhoto=null; //need to initialize it
-
-                                bytePhoto = Base64.decode(jsonPhoto, Base64.DEFAULT);
-
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytePhoto, 0, bytePhoto.length);
-                                contact.setPicture(bmp);
-
-                                Log.d(TAG, "onResponse: " + (bmp == null));
-
-                                contacts.add(contact);
-
-                                Log.d(TAG, "onResponse: " + contact.getContactName() + " ("  + contact.getContactID() + ")");
-                                volleyCallback.onSuccess(contacts);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                T team = entityType.getDeclaredConstructor(JSONObject.class).newInstance(object);
+                                entities.add(team);
+                            } catch (Exception e) {
+                                Log.e(TAG, "execGetRequest: ", e);
+                                throw new RuntimeException(e);
                             }
+                            volleyCallback.onSuccess(entities);
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "Error: " + error.getMessage());
-                    volleyCallback.onError(error.getMessage());
-                }
-            });
-
-            queue.add(stringRequest);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        }
+                    });
+            // IMPORTANT
+            Log.d(TAG, "execGetRequest: Add Request");
+            requestQueue.add(stringRequest);
+        }
+        catch(Exception e)
+        {
+            Log.e(TAG, "execGetRequest: ", e);
+            throw new RuntimeException(e);
         }
     }
-    private static void executeRequest(Contact contact,
-                                       String url,
-                                       Context context,
-                                       VolleyCallback volleyCallback,
-                                       int method)
+    //com.google.code.gson
+    private static <T> void executeRequest(T entity,
+                                           String url,
+                                           Context context,
+                                           VolleyCallback volleyCallback,
+                                           int method,
+                                           Class<T> entityType)
 
     {
+
+        Log.d(TAG, "executeRequest: Start : " + method + " : " + url);
+        ArrayList<T> entities = new ArrayList<T>();
+
         try {
-            RequestQueue queue = Volley.newRequestQueue(context);
-            JSONObject object = new JSONObject();
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-            object.put("id", contact.getContactID());
-            object.put("contactName", contact.getContactName());
-            object.put("streetAddress", contact.getStreetAddress());
-            object.put("city", contact.getCity());
-            object.put("state", contact.getState());
-            object.put("zipCode", contact.getZipCode());
-            object.put("phoneNumber", contact.getPhoneNumber());
-            object.put("cellNumber", contact.getCellNumber());
-            object.put("email", contact.geteMail());
-            object.put("photo", null);
-            object.put("birthday", String.valueOf(contact.getBirthday().getTimeInMillis()));
+            // Add the com.google.code.gson library
+            Gson gson = new Gson();
+            JSONObject item = new JSONObject(gson.toJson(entity));
+            Log.d(TAG, "executeRequest: Create JSON" + item);
 
-            //Update the picture
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            Bitmap bmp = contact.getPicture();
-            if(bmp != null)
-            {
-                Bitmap bitmap = Bitmap.createScaledBitmap(bmp, 200, 200, false);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                byte[] imageBytes = byteArrayOutputStream.toByteArray();
-                String jsonPhoto = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-                Log.d(TAG, "executeRequest: Ended the Photo Processing" );
-                object.put("photo", jsonPhoto);
-            }
+            item.put("id", item.get("contactID"));
+            item.put("contactId", item.get("contactID"));
+            item.put("photo", null);
+            item.put("photo", item.get("photoJson"));
+            item.put("birthday", item.get("birthdayLong"));
 
-            final String requestBody = object.toString();
+            final String requestBody = item.toString();
+            Log.d(TAG, "executeRequest: " + requestBody);
 
-            JsonObjectRequest request = new JsonObjectRequest(method, url, object,
+            JsonObjectRequest request = new JsonObjectRequest(method,
+                    url,
+                    item,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, "onResponse: " + response);
-                            volleyCallback.onSuccess(null);
+                            entities.add(entity);
+                            volleyCallback.onSuccess(entities);
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    volleyCallback.onError(error.getMessage());
-                }
-            })
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        }
+                    })
             {
                 @Override
-                public byte[] getBody() {
-                    Log.d(TAG, "getBody: " + object.toString());
-                    return object.toString().getBytes(StandardCharsets.UTF_8);
+                public byte[] getBody(){
+                    Log.d(TAG, "getBody: " + item.toString());
+                    return item.toString().getBytes(StandardCharsets.UTF_8);
                 }
             };
-            queue.add(request);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            requestQueue.add(request);
+        }
+        catch(Exception e)
+        {
+            Log.d(TAG, "executeRequest: Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
-    public static void executePostRequest(Contact contact,
+    public static <T> void executePostRequest(T entity,
+                                              String url,
+                                              Context context,
+                                              VolleyCallback volleyCallback,
+                                              Class<T> entityType)
+    {
+        try
+        {
+            executeRequest(entity, url, context, volleyCallback, Request.Method.POST, entityType);
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+    public static <T> void executePutRequest(T entity,
                                           String url,
                                           Context context,
-                                          VolleyCallback volleyCallback)
+                                          VolleyCallback volleyCallback,
+                                          Class<T> entityType)
     {
         try {
-            executeRequest(contact, url, context, volleyCallback, Request.Method.POST);
+            executeRequest(entity, url, context, volleyCallback, Request.Method.PUT, entityType);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void executePutRequest(Contact contact,
-                                          String url,
-                                          Context context,
-                                          VolleyCallback volleyCallback)
+    public static <T> void executeDeleteRequest(T entity,
+                                                String url,
+                                                Context context,
+                                                VolleyCallback volleyCallback,
+                                                Class<T> entityType)
     {
         try {
-            executeRequest(contact, url, context, volleyCallback, Request.Method.PUT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public static void executeDeleteRequest(Contact contact,
-                                         String url,
-                                         Context context,
-                                         VolleyCallback volleyCallback)
-    {
-        try {
-            executeRequest(contact, url, context, volleyCallback, Request.Method.DELETE);
+            executeRequest(entity, url, context, volleyCallback, Request.Method.DELETE, entityType);
         } catch (Exception e) {
             e.printStackTrace();
         }

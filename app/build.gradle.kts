@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.activity.ktx)
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
+    implementation(libs.gson)
     implementation(libs.material)
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)

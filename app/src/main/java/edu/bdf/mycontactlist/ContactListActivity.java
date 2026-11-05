@@ -40,7 +40,7 @@ public class ContactListActivity extends AppCompatActivity {
             Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
             Log.d(TAG, "onClick: Before");
             Contact contact = contacts.get(position);
-            contact.setPicture(null);
+            contact.setPhoto(null);
             intent.putExtra("contact", contacts.get(position));
             Log.d(TAG, "onClick: After");
             startActivity(intent);
@@ -89,6 +89,35 @@ public class ContactListActivity extends AppCompatActivity {
         getContacts();
     }
 
+    public void getContactsFromAPI()
+    {
+        RestClient.executeGetRequest(CONTACTSAPI,
+                this,
+                new VolleyCallback() {
+                    @Override
+                    public <T> void onSuccess(ArrayList<T> result) {
+                        Log.d(TAG, "onSuccess: Contacts : " + result.size());
+                        contacts = (ArrayList<Contact>) result;
+                        if (!contacts.isEmpty()) {
+                            RecyclerView contactList = findViewById(R.id.rvContacts);
+                            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ContactListActivity.this);
+                            contactList.setLayoutManager(layoutManager);
+                            contactAdapter = new ContactAdapter(contacts, ContactListActivity.this);
+                            contactAdapter.setOnItemClickListener(onItemClickListener);
+                            contactList.setAdapter(contactAdapter);
+                            for(Contact c : contacts)
+                                Log.d(TAG, "onSuccess: " + c.toString());
+                            Log.d(TAG, "onSuccess End: " + contacts.size());
+                        }
+                    }
+                    @Override
+                    public void onError(String error) {
+                        Log.d(TAG, "onError: " + error);
+                    }
+                },
+                Contact.class);
+    }
+
     private void initAddContactButton() {
         Button newContact = findViewById(R.id.buttonAddContact);
         newContact.setOnClickListener(new View.OnClickListener() {
@@ -116,59 +145,8 @@ public class ContactListActivity extends AppCompatActivity {
         String sortOrder = getSharedPreferences("MyContactListPreferences",
                 Context.MODE_PRIVATE).getString("sortorder","ASC");
 
-        //ContactDataSource ds = new ContactDataSource(this);
         try {
-            //ds.open();
-            //contacts = ds.getContacts(sortBy, sortOrder);
-            //contacts = ds.getContactName();
-            //ds.close();
-
-            RestClient.executeGetRequest(CONTACTSAPI,
-                    this,
-                    new VolleyCallback() {
-                        @Override
-                        public void onSuccess(ArrayList<Contact> result) {
-                            Log.d(TAG, "onSuccess: Contacts : " + result.size());
-                            contacts = result;
-                            if (contacts.size() > 0) {
-                                RecyclerView contactList = findViewById(R.id.rvContacts);
-
-                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ContactListActivity.this);
-                                contactList.setLayoutManager(layoutManager);
-
-                                contactAdapter = new ContactAdapter(contacts, ContactListActivity.this);
-                                contactAdapter.setOnItemClickListener(onItemClickListener);
-                                contactList.setAdapter(contactAdapter);
-                                Log.d(TAG, "onSuccess End");
-                            }
-                            else {
-                                Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
-                                startActivity(intent);
-                            }
-
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            Log.d(TAG, "onError: " + error);
-                        }
-                    });
-
-//            if (contacts.size() > 0) {
-//                contactList = findViewById(R.id.rvContacts);
-//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-//                contactList.setLayoutManager(layoutManager);
-//                contactAdapter = new ContactAdapter(contacts, this);
-//                contactAdapter.setOnItemClickListener(onItemClickListener);
-//                contactList.setAdapter(contactAdapter);
-//            }
-//            else {
-//                ds.open();
-//                ds.refreshData();
-//                ds.close();
-//                //Intent intent = new Intent(ContactListActivity.this, ContactEditActivity.class);
-//                //startActivity(intent);
-//            }
+            getContactsFromAPI();
         }
         catch (Exception e) {
             Toast.makeText(this, "Error retrieving contacts", Toast.LENGTH_LONG).show();
