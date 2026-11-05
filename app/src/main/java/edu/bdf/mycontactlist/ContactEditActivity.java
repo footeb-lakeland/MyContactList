@@ -328,10 +328,10 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                         new VolleyCallback() {
                             @Override
                             public <T> void onSuccess(ArrayList<T> result) {
-                                int id = ((Contact)result.get(0)).getContactID();
-                                currentContact.setContactID(id);
+                                currentContact = (Contact)result.get(0);
                                 Log.d(TAG, "onSuccess: " + currentContact.getContactID());
                                 setForEditing(false);
+                                RebindScreen();
                             }
 
                             @Override
