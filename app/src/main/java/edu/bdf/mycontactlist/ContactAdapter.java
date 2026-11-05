@@ -89,10 +89,10 @@ public class ContactAdapter extends RecyclerView.Adapter{
         else {
             cvh.getDeleteButton().setVisibility(View.INVISIBLE);
         }
-        if(contactData.get(position).getPicture() != null)
+        if(contactData.get(position).getPhoto() != null)
         {
             // Bind the picture
-            cvh.getImageButton().setImageBitmap(contactData.get(position).getPicture());
+            cvh.getImageButton().setImageBitmap(contactData.get(position).getPhoto());
         }
     }
 
@@ -103,30 +103,28 @@ public class ContactAdapter extends RecyclerView.Adapter{
 
     private void deleteItem(int position) {
         Contact contact = contactData.get(position);
-        //ContactDataSource ds = new ContactDataSource(parentContext);
         try {
-            //ds.open();
-            //boolean didDelete = ds.deleteContact(contact.getContactID());
-            //ds.close();
-            RestClient.executeDeleteRequest(contact,
-                ContactListActivity.CONTACTSAPI + contact.getContactID(),
-                 this.parentContext,
-                 new VolleyCallback() {
-                    @Override
-                    public void onSuccess(ArrayList<Contact> result) {
-                        Log.d(TAG, "onSuccess: " + contact.getContactID());
-                        contactData.remove(position);
-                        notifyDataSetChanged();
-                    }
-                    @Override
-                    public void onError(String error) {
-                        Log.d(TAG, "onError: " + error);
-                    }});
+            RestClient.executeDeleteRequest(contactData.get(position),
+                    ContactListActivity.CONTACTSAPI + contact.getContactID(),
+                    this.parentContext,
+                    new VolleyCallback() {
+                        @Override
+                        public <T> void onSuccess(ArrayList<T> result) {
+                            contactData.remove(contact);
+                            notifyDataSetChanged();
+                            Log.d(TAG, "onSuccess: Delete: " + contact.getContactName());
+                        }
 
+                        @Override
+                        public void onError(String error) {
+                            Log.d(TAG, "onError: " + error);
+                        }
+                    }, Contact.class);
         }
         catch (Exception e) {
-
+            Log.d(TAG, "deleteItem: " + e.getMessage());
         }
+
     }
 
     public void setDelete(boolean b) {
