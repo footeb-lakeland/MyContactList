@@ -51,7 +51,8 @@ public class ContactDataSource {
                 "54901",
                 "9201112222",
                 "9202223333",
-                "footeb@lakeland.edu"));
+                "footeb@lakeland.edu",
+                calendar));
 
         calendar.set(Calendar.YEAR, 1996);
         calendar.set(Calendar.MONTH, Calendar.DECEMBER); // Note: Months are 0-based, so September is 8
@@ -64,7 +65,8 @@ public class ContactDataSource {
                 "53081",
                 "9203334444",
                 "9204445555",
-                "soloh@lakeland.edu"));
+                "soloh@lakeland.edu",
+                calendar));
 
         calendar.set(Calendar.YEAR, 1941);
         calendar.set(Calendar.MONTH, Calendar.DECEMBER); // Note: Months are 0-based, so September is 8
@@ -77,7 +79,8 @@ public class ContactDataSource {
                 "53081",
                 "9203334545",
                 "9204445656",
-                "organal@lakeland.edu"));
+                "organal@lakeland.edu",
+                calendar));
 
         // Delete and reinsert all the teams
         long results = 0;
@@ -112,7 +115,7 @@ public class ContactDataSource {
             contact.setZipCode(cursor.getString(5));
             contact.setPhoneNumber(cursor.getString(6));
             contact.setCellNumber(cursor.getString(7));
-            contact.seteMail(cursor.getString(8));
+            contact.setEMail(cursor.getString(8));
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.valueOf(cursor.getString(9)));
             contact.setBirthday(calendar);
@@ -121,7 +124,7 @@ public class ContactDataSource {
             if (photo != null) {
                 ByteArrayInputStream imageStream = new ByteArrayInputStream(photo);
                 Bitmap thePicture= BitmapFactory.decodeStream(imageStream);
-                contact.setPicture(thePicture);
+                contact.setPhoto(thePicture);
             }
             cursor.close();
         }
@@ -145,7 +148,7 @@ public class ContactDataSource {
                 newContact.setZipCode(cursor.getString(5));
                 newContact.setPhoneNumber(cursor.getString(6));
                 newContact.setCellNumber(cursor.getString(7));
-                newContact.seteMail(cursor.getString(8));
+                newContact.setEMail(cursor.getString(8));
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(Long.valueOf(cursor.getString(9)));
                 newContact.setBirthday(calendar);
@@ -155,7 +158,7 @@ public class ContactDataSource {
                 if (photo != null) {
                     ByteArrayInputStream imageStream = new ByteArrayInputStream(photo);
                     Bitmap thePicture= BitmapFactory.decodeStream(imageStream);
-                    newContact.setPicture(thePicture);
+                    newContact.setPhoto(thePicture);
                 }
 
                 contacts.add(newContact);
@@ -200,12 +203,12 @@ public class ContactDataSource {
             initialValues.put("zipcode", c.getZipCode());
             initialValues.put("phonenumber", c.getPhoneNumber());
             initialValues.put("cellnumber", c.getCellNumber());
-            initialValues.put("email", c.geteMail());
+            initialValues.put("email", c.getEMail());
             initialValues.put("birthday",String.valueOf(c.getBirthday().getTimeInMillis()));
 
-            if (c.getPicture() != null) {
+            if (c.getPhoto() != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                c.getPicture().compress(Bitmap.CompressFormat.PNG, 100, baos);
+                c.getPhoto().compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] photo = baos.toByteArray();
                 initialValues.put("contactphoto", photo);
             }
@@ -231,13 +234,13 @@ public class ContactDataSource {
             updateValues.put("zipcode", c.getZipCode());
             updateValues.put("phonenumber", c.getPhoneNumber());
             updateValues.put("cellnumber", c.getCellNumber());
-            updateValues.put("email", c.geteMail());
+            updateValues.put("email", c.getEMail());
             updateValues.put("birthday",
                     String.valueOf(c.getBirthday().getTimeInMillis()));
 
-            if (c.getPicture() != null) {
+            if (c.getPhoto() != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                c.getPicture().compress(Bitmap.CompressFormat.PNG, 100, baos);
+                c.getPhoto().compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] photo = baos.toByteArray();
                 updateValues.put("contactphoto", photo);
             }

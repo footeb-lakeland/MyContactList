@@ -122,7 +122,7 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                         Bitmap scaledPhoto = Bitmap.createScaledBitmap(photo,144,144,true);
                         ImageButton imageContact = (ImageButton) findViewById(R.id.imageContact);
                         imageContact.setImageBitmap(scaledPhoto);
-                        currentContact.setPicture(scaledPhoto);
+                        currentContact.setPhoto(scaledPhoto);
                         Log.d(TAG, "onActivityResult: Set Bitmap");
 
                     }
@@ -248,12 +248,12 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
         editZipCode.setText(currentContact.getZipCode());
         editPhone.setText(currentContact.getPhoneNumber());
         editCell.setText(currentContact.getCellNumber());
-        editEmail.setText(currentContact.geteMail());
+        editEmail.setText(currentContact.getEMail());
         birthDay.setText(DateFormat.format("MM/dd/yyyy",
                 currentContact.getBirthday().getTimeInMillis()).toString());
         ImageButton picture = findViewById(R.id.imageContact);
-        if (currentContact.getPicture() != null) {
-            picture.setImageBitmap(currentContact.getPicture());
+        if (currentContact.getPhoto() != null) {
+            picture.setImageBitmap(currentContact.getPhoto());
         }
         else {
             picture.setImageResource(R.drawable.noimage);
@@ -325,22 +325,24 @@ public class ContactEditActivity extends AppCompatActivity implements DatePicker
                 Log.d(TAG, "getOneMeal: " + ContactListActivity.CONTACTSAPI + id);
                 RestClient.executeGetOneRequest(ContactListActivity.CONTACTSAPI + id,
                         this,
-                    new VolleyCallback() {
-                        @Override
-                        public <T> void onSuccess(ArrayList<T> result) {
-                            //do stuff here
-                            for (T c : result) {
-                                Log.d(TAG, "onResume: " + ((Contact)c).getContactName());
+                        new VolleyCallback() {
+                            @Override
+                            public <T> void onSuccess(ArrayList<T> result) {
+                                int id = ((Contact)result.get(0)).getContactID();
+                                currentContact.setContactID(id);
+                                Log.d(TAG, "onSuccess: " + currentContact.getContactID());
+                                setForEditing(false);
                             }
-                            currentContact = result.get(0);
-                            RebindScreen();
-                        }
-                        @Override
-                        public void onError(String error) {
-                            Log.d(TAG, "onError: ");
-                        }
-                    });
+
+                            @Override
+                            public void onError(String error) {
+                                Log.d(TAG, "onFailure: ");
+                            }
+                        },
+                        Contact.class);
+
                 Log.d(TAG, "getOneContact: Contacts End");
+
             }
             catch (Exception e) {
                 Log.d(TAG, "getOneContact: " + e.getMessage());
